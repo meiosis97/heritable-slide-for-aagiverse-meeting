@@ -1,6 +1,6 @@
 ---
-title: Revealjs Quarto template 
-subtitle: for the Australian National University
+title: Flexible heritability estimation from complex linear mixed models
+subtitle: AAGIverse Community Event
 format:
   anu-light-revealjs:
     width: 1920
@@ -9,19 +9,68 @@ format:
     auto-stretch: false
     html-math-method: katex
     self-contained: false
-author: Emi Tanaka
-institute: Biological Data Science Institute
+    css: custom.css
+author:
+  - name: Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
+institute: Research School of Finance, Actuarial Studies and Statistics, ANU
 date: last-modified
+bibliography: references.bib
 date-format: "D[th] MMMM YYYY"
 ---
 
-## Introduction
+## Project overview
 
-{{< fa link >}}
+### Flexible heritability estimation for linear mixed models (LMMs)
 
+This project aims to make heritability estimation from LMMs more accessible, flexible, and interpretable.
 
+<br>
 
-## More Information
+### It brings together:
 
-You can learn more about controlling the appearance of RevealJS output here: <https://quarto.org/docs/presentations/revealjs/>
+-   multiple commonly used heritability estimators [@schmidt_2019]
+-   confidence interval based on parametric bootstrap
+-   support for different LMM fitters, including `asreml` and `lme4`, with flexible model constructs
+-   G×E extensions for environment-specific and environment-averaged heritability
+-   a companion paper on estimator relationships and statistical properties
 
+## Acknowledgement
+
+<br><br>
+
+![](images/fonti.jpg){fig-align="center" .circle-photo}
+
+<br><br>
+
+**Dr. Fonti Kar** made the foundational contribution to this project.
+
+## Software availability
+
+### Thanks to Fonti’s earlier work, **`heritable` is already available on CRAN**.
+
+The CRAN version only supports **broad-sense heritability** estimation on relatively simple model.
+
+<br>
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+
+# # Install the CRAN version
+# install.packages("heritable")
+
+fit <- lme4::lmer(y ~ rep + (1|gen), data = heritable::lettuce_phenotypes)
+
+heritable::H2(fit, target = "gen")
+```
+:::
+
+<br>
+
+The current development version is maintained on GitHub, mainly on the **`narrow-sense`** branch (<https://github.com/anu-aagi/heritable/tree/narrow-sense>).
+
+## Reference
+
+::: {#refs}
+:::
