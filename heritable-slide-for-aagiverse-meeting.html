@@ -6,8 +6,8 @@
 <script src="heritable-slide-for-aagiverse-meeting_files/libs/quarto-html/tippy.umd.min.js"></script>
 <link href="heritable-slide-for-aagiverse-meeting_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="heritable-slide-for-aagiverse-meeting_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="heritable-slide-for-aagiverse-meeting_files/libs/quarto-html/quarto-syntax-highlighting-ea385d0e468b0dd5ea5bf0780b1290d9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.33">
+<link href="heritable-slide-for-aagiverse-meeting_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
 
   <meta name="author" content="Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka">
   <title>Flexible heritability estimation from complex linear mixed models</title>
@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -98,7 +101,6 @@
     div.csl-bib-body { }
     div.csl-entry {
       clear: both;
-      margin-bottom: 0em;
     }
     .hanging-indent div.csl-entry {
       margin-left:2em;
@@ -115,8 +117,24 @@
     div.csl-indent {
       margin-left: 2em;
     }  </style>
-  <link rel="stylesheet" href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/dist/theme/quarto-77f86c4bd16bb7e99dad6551774066b3.css">
+  <link rel="stylesheet" href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/dist/theme/quarto-791fde3cebc37c106af414651b6dbca2.css">
   <link rel="stylesheet" href="custom.css">
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
   <link href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="heritable-slide-for-aagiverse-meeting_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -230,7 +248,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
     </div>
 </div>
 
-  <p class="date">16th June 2026</p>
+  <p class="date">17th June 2026</p>
 </section>
 <section id="project-overview" class="slide level2">
 <h2>Project overview</h2>
@@ -239,7 +257,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
 <p><br></p>
 <h3 id="it-brings-together">It brings together:</h3>
 <ul>
-<li>multiple commonly used heritability estimators <span class="citation" data-cites="schmidt_2019">(<a href="#/reference" role="doc-biblioref" onclick="">Schmidt et al. 2019</a>)</span></li>
+<li>6 commonly used heritability estimators <span class="citation" data-cites="schmidt_2019">(<a href="#/reference" role="doc-biblioref" onclick="">Paul Schmidt et al. 2019</a>)</span></li>
 <li>confidence interval based on parametric bootstrap</li>
 <li>support for different LMM fitters, including <code>asreml</code> and <code>lme4</code>, with flexible model constructs</li>
 <li>G×E extensions for environment-specific and environment-averaged heritability</li>
@@ -264,12 +282,12 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
 <p><br></p>
 <div class="small-code">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># # Install the CRAN version</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># # Install the CRAN version</span></span>
 <span id="cb1-2"><a href=""></a><span class="co"># install.packages("heritable")</span></span>
 <span id="cb1-3"><a href=""></a></span>
 <span id="cb1-4"><a href=""></a>fit <span class="ot">&lt;-</span> lme4<span class="sc">::</span><span class="fu">lmer</span>(y <span class="sc">~</span> rep <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>gen), <span class="at">data =</span> heritable<span class="sc">::</span>lettuce_phenotypes)</span>
 <span id="cb1-5"><a href=""></a></span>
-<span id="cb1-6"><a href=""></a>heritable<span class="sc">::</span><span class="fu">H2</span>(fit, <span class="at">target =</span> <span class="st">"gen"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a href=""></a>heritable<span class="sc">::</span><span class="fu">H2</span>(fit, <span class="at">target =</span> <span class="st">"gen"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
 0.7737597 0.7737597 0.7725430 0.7737597 0.7725517 </code></pre>
@@ -279,11 +297,109 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
 <p><br></p>
 <p>The current development version is maintained on GitHub, mainly on the <strong><code>narrow-sense</code></strong> branch (<a href="https://github.com/anu-aagi/heritable/tree/narrow-sense" class="uri">https://github.com/anu-aagi/heritable/tree/narrow-sense</a>).</p>
 </section>
+<section id="manuscript-in-preparation" class="slide level2">
+<h2>Manuscript in preparation</h2>
+<div class="columns">
+<div class="column" style="width:35%;">
+<p><br><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/manuscript.jpg" class="quarto-figure quarto-figure-center"></p>
+</figure>
+</div>
+</div><div class="column" style="width:65%;">
+<p><br></p>
+<h3 id="beyond-implementing-existing-estimators">Beyond implementing existing estimators</h3>
+<p>We re-derive different heritability estimators within <strong>a unified mathematical framework</strong> that:</p>
+<ul>
+<li><p>connects different estimators</p></li>
+<li><p>provides a comprehensive understanding of their underlying estimands</p></li>
+<li><p>extends heritability definitions to more flexible model settings</p></li>
+</ul>
+<p><br></p>
+<p>Extensive numerical studies show that heritability estimation is strongly <strong>design-dependent</strong>.</p>
+</div></div>
+</section>
+<section id="heritability-as-variance-partitioning" class="slide level2">
+<h2>Heritability as variance partitioning</h2>
+<h3 id="heritability-estimation-is-fundamentally-about-partitioning-variation-under-a-lmm.">Heritability estimation is fundamentally about <em>partitioning variation</em> under a LMM.</h3>
+<p><span class="math display">
+\mathbf{y}
+=
+\mathbf{X}\boldsymbol{\beta}
++
+\mathbf{Z}_g\mathbf{u}_g
++
+\mathbf{Z}_{ge}\mathbf{u}_{ge}
++
+\boldsymbol{\varepsilon}
+</span></p>
+<p>where</p>
+<p><span class="math display">
+\mathbf{u}_g \sim N(\mathbf{0}, \mathbf{G}_g),
+\qquad
+\mathbf{u}_{ge} \sim N(\mathbf{0}, \mathbf{G}_{ge}),
+\qquad
+\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \mathbf{R})
+</span></p>
+<p>This model gives arise to three related variance quantities:</p>
+<ul>
+<li><p>Phenotypic variance: <span class="math inline">V_P = \mathrm{Var}(\mathbf{d}^\top \mathbf{y})</span></p></li>
+<li><p>Genetic variance: <span class="math inline">V_G = \mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)</span></p></li>
+<li><p>Prediction error variance: <span class="math inline">V_{\mathrm{PEV}} =\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]</span>, <span class="math inline">\hat{\mathbf{u}}_g</span> is the BLUP of <span class="math inline">\mathbf{u}_g</span></p></li>
+</ul>
+</section>
+<section id="two-classes-of-heritability-estimators" class="slide level2">
+<h2>Two classes of heritability estimators</h2>
+<p>Two classes of estimators emerge from decomposing two different notions of variance:</p>
+<p><br></p>
+<h3 id="phenotypic-variance-partition">Phenotypic variance partition</h3>
+<p><span class="math display">
+V_P = \mathrm{Var}(\mathbf{d}^\top \mathbf{y}) =
+\underbrace{\mathrm{Var}(\mathbf{d}^\top \mathbf{Z}_g\mathbf{u}_g)}_{V_G} +
+\mathrm{Var}(\mathbf{d}^\top \mathbf{Z}_{ge} \mathbf{u}_{ge}) +  
+\mathrm{Var}(\mathbf{d}^\top \mathbf{\epsilon})
+</span> <span class="math display">
+H^2 = V_G/V_P
+</span></p>
+<h3 id="genetic-variance-partition">Genetic variance partition</h3>
+<p><span class="math display">
+V_G = \mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g) =\mathrm{Var}(\mathbf{c}^\top \hat{\mathbf{u}}_g) + \underbrace{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}_{V_{\text{PEV}}}
+</span> <span class="math display">
+H^2 = 1 - V_{\text{PEV}}/V_G
+</span></p>
+</section>
+<section id="phenotypic-variance-partition-1" class="slide level2">
+<h2>Phenotypic variance partition</h2>
+<p>This class includes the <code>Standard</code>, <code>Delta (BLUE)</code>, and <code>Piepho</code> estimators. Different estimator differs by how the linear functionals are defined:</p>
+<ul>
+<li><p><code>Standard</code> <span class="citation" data-cites="falconer1996introduction">(<a href="#/reference" role="doc-biblioref" onclick="">Falconer 1996</a>)</span>: <span class="math inline">\mathbf{d}_{ij}</span> is defined for a genotype pair <span class="math inline">(i, j)</span> such that <span class="math inline">\mathbf{d}_{ij}^\top \mathbf{y}</span> represents the phenotypic mean difference between genotypes <span class="math inline">i</span> and <span class="math inline">j</span>: <span class="math display">
+\mathbf{d}_{ij}^\top \mathbf{y} = \bar{y}_i - \bar{y}_j.
+</span></p></li>
+<li><p><code>Delta (BLUE)</code> <span class="citation" data-cites="schmidt2019estimating">(<a href="#/reference" role="doc-biblioref" onclick="">P. Schmidt et al. 2019</a>)</span>: same pairwise idea, but <span class="math inline">\mathbf{d}_{ij}</span> maps <span class="math inline">\mathbf{y}</span> to BLUE contrasts from a counterpart model where genetic effects are fitted as fixed: <span class="math display">
+y \sim x + (1|g) + (1|ge) \Rightarrow y \sim x + g + (1|ge)
+</span> <span class="math display">
+\mathbf{d}_{ij}^\top \mathbf{y}
+=
+\hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
+</span></p></li>
+<li><p><code>Piepho</code> <span class="citation" data-cites="piepho2007computing">(<a href="#/reference" role="doc-biblioref" onclick="">Piepho and Mohring 2007</a>)</span>: aggregated Delta heritability for isotropic <span class="math inline">\mathbf{G}_g</span></p></li>
+</ul>
+</section>
 <section id="reference" class="slide level2 smaller scrollable">
 <h2>Reference</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-falconer1996introduction" class="csl-entry" role="listitem">
+Falconer, Douglas Scott. 1996. <em>Introduction to Quantitative Genetics</em>. Pearson Education India.
+</div>
+<div id="ref-piepho2007computing" class="csl-entry" role="listitem">
+Piepho, Hans-Peter, and Jens Mohring. 2007. <span>“Computing Heritability and Selection Response from Unbalanced Plant Breeding Trials.”</span> <em>Genetics</em> 177 (3): 1881–88.
+</div>
 <div id="ref-schmidt_2019" class="csl-entry" role="listitem">
 Schmidt, Paul, Jens Hartung, Jörn Bennewitz, and Hans-Peter Piepho. 2019. <span>“Heritability in <span>Plant Breeding</span> on a <span>Genotype-Difference Basis</span>.”</span> <em>Genetics</em> 212 (4): 991–1008. <a href="https://doi.org/10.1534/genetics.119.302134">https://doi.org/10.1534/genetics.119.302134</a>.
+</div>
+<div id="ref-schmidt2019estimating" class="csl-entry" role="listitem">
+Schmidt, P, J Hartung, J Rath, and H-P Piepho. 2019. <span>“Estimating Broad-Sense Heritability with Unbalanced Data from Agricultural Cultivar Trials.”</span> <em>Crop Science</em> 59 (2): 525–36.
 </div>
 </div>
 
@@ -488,23 +604,41 @@ Schmidt, Paul, Jens Hartung, Jörn Bennewitz, and Hans-Peter Piepho. 2019. <span
       });
     </script>
     
+
     <script type="text/javascript">
+
         Reveal.on('ready', event => {
+
           if (event.indexh === 0) {
+
             document.querySelector("div.has-logo > img.slide-logo").style.display = "none";
+
           }
+
         });
+
         Reveal.addEventListener('slidechanged', (event) => {
+
           if (event.indexh === 0) {
+
             Reveal.configure({ slideNumber: null });
+
             document.querySelector("div.has-logo > img.slide-logo").style.display = "none";
+
           }
+
           if (event.indexh === 1) {
+
             Reveal.configure({ slideNumber: 'c/t' });
+
             document.querySelector("div.has-logo > img.slide-logo").style.display = null;
+
           }
+
         });
+
     </script>
+
     
 
     <script>
@@ -629,13 +763,14 @@ Schmidt, Paul, Jens Hartung, Jörn Bennewitz, and Hans-Peter Piepho. 2019. <span
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

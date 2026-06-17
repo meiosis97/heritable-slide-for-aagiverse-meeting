@@ -28,7 +28,7 @@ This project aims to make heritability estimation from LMMs more accessible, fle
 
 ### It brings together:
 
--   multiple commonly used heritability estimators [@schmidt_2019]
+-   6 commonly used heritability estimators [@schmidt_2019]
 -   confidence interval based on parametric bootstrap
 -   support for different LMM fitters, including `asreml` and `lme4`, with flexible model constructs
 -   G×E extensions for environment-specific and environment-averaged heritability
@@ -69,6 +69,117 @@ heritable::H2(fit, target = "gen")
 <br>
 
 The current development version is maintained on GitHub, mainly on the **`narrow-sense`** branch (<https://github.com/anu-aagi/heritable/tree/narrow-sense>).
+
+## Manuscript in preparation
+
+
+:::: {.columns}
+
+::: {.column width="35%"}
+<br><br>
+
+![](images/manuscript.jpg){fig-align="center"}
+:::
+
+::: {.column width="65%"}
+<br>
+
+### Beyond implementing existing estimators
+
+We re-derive different heritability estimators within **a unified mathematical framework** that:
+
+- connects different estimators
+
+- provides a comprehensive understanding of their underlying estimands
+
+- extends heritability definitions to more flexible model settings
+
+<br>
+
+Extensive numerical studies show that heritability estimation is strongly **design-dependent**.
+:::
+
+::::
+
+## Heritability as variance partitioning
+
+### Heritability estimation is fundamentally about *partitioning variation* under a LMM.
+
+$$
+\mathbf{y}
+=
+\mathbf{X}\boldsymbol{\beta}
++
+\mathbf{Z}_g\mathbf{u}_g
++
+\mathbf{Z}_{ge}\mathbf{u}_{ge}
++
+\boldsymbol{\varepsilon}
+$$
+
+where
+
+$$
+\mathbf{u}_g \sim N(\mathbf{0}, \mathbf{G}_g),
+\qquad
+\mathbf{u}_{ge} \sim N(\mathbf{0}, \mathbf{G}_{ge}),
+\qquad
+\boldsymbol{\varepsilon} \sim N(\mathbf{0}, \mathbf{R})
+$$
+
+This model gives arise to three related variance quantities:
+
+- Phenotypic variance: $V_P = \mathrm{Var}(\mathbf{d}^\top \mathbf{y})$
+
+- Genetic variance: $V_G = \mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)$
+
+- Prediction error variance: $V_{\mathrm{PEV}} =\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]$, $\hat{\mathbf{u}}_g$ is the BLUP of $\mathbf{u}_g$
+
+## Two classes of heritability estimators
+
+Two classes of estimators emerge from decomposing two different notions of variance:
+
+<br>
+
+
+### Phenotypic variance partition
+$$
+V_P = \mathrm{Var}(\mathbf{d}^\top \mathbf{y}) =
+\underbrace{\mathrm{Var}(\mathbf{d}^\top \mathbf{Z}_g\mathbf{u}_g)}_{V_G} + 
+\mathrm{Var}(\mathbf{d}^\top \mathbf{Z}_{ge} \mathbf{u}_{ge}) +  
+\mathrm{Var}(\mathbf{d}^\top \mathbf{\epsilon})
+$$
+$$
+H^2 = V_G/V_P
+$$
+
+### Genetic variance partition
+$$
+V_G = \mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g) =\mathrm{Var}(\mathbf{c}^\top \hat{\mathbf{u}}_g) + \underbrace{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}_{V_{\text{PEV}}}
+$$
+$$
+H^2 = 1 - V_{\text{PEV}}/V_G
+$$
+
+## Phenotypic variance partition
+
+This class includes the `Standard`, `Delta (BLUE)`, and `Piepho` estimators. Different estimator differs by how the linear functionals are defined:
+
+- `Standard` [@falconer1996introduction]: $\mathbf{d}_{ij}$ is defined for a genotype pair $(i, j)$ such that $\mathbf{d}_{ij}^\top \mathbf{y}$ represents the phenotypic mean difference between genotypes $i$ and $j$:
+  $$
+  \mathbf{d}_{ij}^\top \mathbf{y} = \bar{y}_i - \bar{y}_j. 
+  $$
+- `Delta (BLUE)` [@schmidt2019estimating]: same pairwise idea, but $\mathbf{d}_{ij}$ maps $\mathbf{y}$ to BLUE contrasts from a counterpart model where genetic effects are fitted as fixed:
+  $$
+  y \sim x + (1|g) + (1|ge) \Rightarrow y \sim x + g + (1|ge)
+  $$
+  $$
+  \mathbf{d}_{ij}^\top \mathbf{y}
+  =
+  \hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
+  $$
+
+- `Piepho` [@piepho2007computing]: aggregated Delta heritability for isotropic $\mathbf{G}_g$
 
 ## Reference
 
