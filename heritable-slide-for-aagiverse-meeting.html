@@ -248,7 +248,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
     </div>
 </div>
 
-  <p class="date">17th June 2026</p>
+  <p class="date">18th June 2026</p>
 </section>
 <section id="project-overview" class="slide level2">
 <h2>Project overview</h2>
@@ -383,14 +383,46 @@ y \sim x + (1|g) + (1|ge) \Rightarrow y \sim x + g + (1|ge)
 =
 \hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
 </span></p></li>
-<li><p><code>Piepho</code> <span class="citation" data-cites="piepho2007computing">(<a href="#/reference" role="doc-biblioref" onclick="">Piepho and Mohring 2007</a>)</span>: aggregated Delta heritability for isotropic <span class="math inline">\mathbf{G}_g</span></p></li>
+<li><p><code>Piepho</code> <span class="citation" data-cites="piepho2007computing">(<a href="#/reference" role="doc-biblioref" onclick="">Piepho and Mohring 2007</a>)</span>: aggregated <span class="math inline">\Delta^{\text{BLUE}}</span> heritability for isotropic <span class="math inline">\mathbf{G}_g</span></p></li>
 </ul>
+</section>
+<section id="genetic-variance-partition-1" class="slide level2">
+<h2>Genetic variance partition</h2>
+<p>Similarly, the <code>Delta (BLUP)</code>, <code>Cullis</code>, and <code>Oakey</code> estimators differ in how they define linear functionals of genetic effects.</p>
+<ul>
+<li><p><code>Delta (BLUP)</code> <span class="citation" data-cites="schmidt2019estimating">(<a href="#/reference" role="doc-biblioref" onclick="">P. Schmidt et al. 2019</a>)</span>: <span class="math inline">\mathbf{c}_{ij}</span> is defined for genotype pair <span class="math inline">(i, j)</span> for genetic effect contrast: <span class="math display">
+\mathbf{c}_{ij}^\top\mathbf{u}_g = u_{g_i} - u_{g_j}
+</span></p></li>
+<li><p><code>Cullis</code> <span class="citation" data-cites="cullis2006design">(<a href="#/reference" role="doc-biblioref" onclick="">Cullis et al. 2006</a>)</span>: aggregated <span class="math inline">\Delta^{\text{BLUP}}</span> heritability for isotropic <span class="math inline">\mathbf{G}_g</span></p></li>
+<li><p><code>Oakey</code> <span class="citation" data-cites="oakey2006joint">(<a href="#/reference" role="doc-biblioref" onclick="">Oakey et al. 2006</a>)</span>: <span class="math inline">\mathbf{c}</span> is defined in a model dependent way to maximize heritability: <span class="math display">
+\arg\max_\mathbf{c} 1- \frac{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}{\mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)}
+</span></p></li>
+</ul>
+</section>
+<section id="what-we-learned" class="slide level2">
+<h2>What we learned</h2>
+<h3 id="heritability-calculation-is-consistent-regardless-of-the-model">Heritability calculation is consistent regardless of the model</h3>
+<p>The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random-effect component.</p>
+<p><br></p>
+<h3 id="extension-is-straightforward">Extension is straightforward</h3>
+<ol type="1">
+<li><p>We can define our own linear functional.</p></li>
+<li><p>We can incorporate G×E effects by defining a functional <span class="math inline">\tilde{\mathbf{c}}_{ijk}</span> on the full random effect vector <span class="math inline">\mathbf{u} =\begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge}\end{bmatrix}</span>, such that <span class="math inline">\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - u_{g_j} - u_{ge_{jk}}</span> represents a stratified genetic contrast in environment <span class="math inline">k</span>, and <span class="math display">
+H^2 = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}_{ijk}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}_{ijk}^\top \mathbf{u})}
+</span></p></li>
+</ol>
 </section>
 <section id="reference" class="slide level2 smaller scrollable">
 <h2>Reference</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-cullis2006design" class="csl-entry" role="listitem">
+Cullis, Brian R, Alison B Smith, and Neil E Coombes. 2006. <span>“On the Design of Early Generation Variety Trials with Correlated Data.”</span> <em>Journal of Agricultural, Biological, and Environmental Statistics</em> 11 (4): 381–93.
+</div>
 <div id="ref-falconer1996introduction" class="csl-entry" role="listitem">
 Falconer, Douglas Scott. 1996. <em>Introduction to Quantitative Genetics</em>. Pearson Education India.
+</div>
+<div id="ref-oakey2006joint" class="csl-entry" role="listitem">
+Oakey, Helena, Arūnas Verbyla, Wayne Pitchford, Brian Cullis, and Haydn Kuchel. 2006. <span>“Joint Modeling of Additive and Non-Additive Genetic Line Effects in Single Field Trials.”</span> <em>Theoretical and Applied Genetics</em> 113 (5): 809–19.
 </div>
 <div id="ref-piepho2007computing" class="csl-entry" role="listitem">
 Piepho, Hans-Peter, and Jens Mohring. 2007. <span>“Computing Heritability and Selection Response from Unbalanced Plant Breeding Trials.”</span> <em>Genetics</em> 177 (3): 1881–88.

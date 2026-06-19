@@ -179,7 +179,41 @@ This class includes the `Standard`, `Delta (BLUE)`, and `Piepho` estimators. Dif
   \hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
   $$
 
-- `Piepho` [@piepho2007computing]: aggregated Delta heritability for isotropic $\mathbf{G}_g$
+- `Piepho` [@piepho2007computing]: aggregated $\Delta^{\text{BLUE}}$ heritability for isotropic $\mathbf{G}_g$
+
+## Genetic variance partition
+
+Similarly, the `Delta (BLUP)`, `Cullis`, and `Oakey` estimators differ in how they define linear functionals of genetic effects. 
+
+- `Delta (BLUP)` [@schmidt2019estimating]: $\mathbf{c}_{ij}$ is defined for genotype pair $(i, j)$ for genetic effect contrast:
+  $$
+  \mathbf{c}_{ij}^\top\mathbf{u}_g = u_{g_i} - u_{g_j}
+  $$
+
+- `Cullis` [@cullis2006design]: aggregated $\Delta^{\text{BLUP}}$ heritability for isotropic $\mathbf{G}_g$
+
+- `Oakey` [@oakey2006joint]: $\mathbf{c}$ is defined in a model dependent way to maximize heritability:
+  $$
+  \arg\max_\mathbf{c} 1- \frac{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}{\mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)}
+  $$
+
+## What we learned
+
+### Heritability calculation is consistent regardless of the model
+
+The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random-effect component.
+
+<br>
+
+### Extension is straightforward
+
+1. We can define our own linear functional.
+
+2. We can incorporate G×E effects by defining a functional $\tilde{\mathbf{c}}_{ijk}$ on the full random effect vector
+$\mathbf{u} =\begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge}\end{bmatrix}$, such that $\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - u_{g_j} - u_{ge_{jk}}$ represents a stratified genetic contrast in environment $k$, and 
+$$
+H^2 = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}_{ijk}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}_{ijk}^\top \mathbf{u})}
+$$
 
 ## Reference
 
