@@ -248,7 +248,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
     </div>
 </div>
 
-  <p class="date">18th June 2026</p>
+  <p class="date">22th June 2026</p>
 </section>
 <section id="project-overview" class="slide level2">
 <h2>Project overview</h2>
@@ -399,18 +399,213 @@ y \sim x + (1|g) + (1|ge) \Rightarrow y \sim x + g + (1|ge)
 </span></p></li>
 </ul>
 </section>
-<section id="what-we-learned" class="slide level2">
-<h2>What we learned</h2>
-<h3 id="heritability-calculation-is-consistent-regardless-of-the-model">Heritability calculation is consistent regardless of the model</h3>
-<p>The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random-effect component.</p>
+<section id="we-can-define-our-own-linear-functionals" class="slide level2">
+<h2>We can define our own linear functionals</h2>
+<p>The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random effect component.</p>
 <p><br></p>
-<h3 id="extension-is-straightforward">Extension is straightforward</h3>
-<ol type="1">
-<li><p>We can define our own linear functional.</p></li>
-<li><p>We can incorporate G×E effects by defining a functional <span class="math inline">\tilde{\mathbf{c}}_{ijk}</span> on the full random effect vector <span class="math inline">\mathbf{u} =\begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge}\end{bmatrix}</span>, such that <span class="math inline">\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - u_{g_j} - u_{ge_{jk}}</span> represents a stratified genetic contrast in environment <span class="math inline">k</span>, and <span class="math display">
-H^2 = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}_{ijk}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}_{ijk}^\top \mathbf{u})}
-</span></p></li>
-</ol>
+<p><span class="math display">
+\mathbf{y}
+=
+\mathbf{X}\boldsymbol{\beta}
++
+\color{red}{\mathbf{Z}_g\mathbf{u}_g}
+\color{black}
++
+\mathbf{Z}_{ge}\mathbf{u}_{ge}
++
+\boldsymbol{\varepsilon}
+</span></p>
+</section>
+<section id="extension-to-ge-is-straightforward" class="slide level2">
+<h2>Extension to G×E is straightforward</h2>
+<p>G×E effects can be incorporated into the heritability definition by defining and decomposing variance of the full random effect vector <span class="math display">
+\mathbf{u} = \begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge} \end{bmatrix},
+</span> Let <span class="math inline">\tilde{\mathbf{c}}</span> be a linear functional defined on <span class="math inline">\mathbf{u}</span>, then <span class="math display">
+H^2_{\text{GVP}} = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}^\top \mathbf{u})}.
+</span></p>
+<p>This extension can be applied also to phenotypic variance partitioning.</p>
+</section>
+<section id="stratified-and-marginal-heritability" class="slide level2">
+<h2>Stratified and marginal heritability</h2>
+<h3 id="stratified-heritability">Stratified heritability</h3>
+<p>We can define stratified heritability with a functional <span class="math inline">\tilde{\mathbf{c}}_{ijk}</span> that contrasts genetic effects within an environment <span class="math inline">k</span>, such that <span class="math display">
+\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - (u_{g_j} + u_{ge_{jk}})
+</span></p>
+<h3 id="marginal-heritability">Marginal heritability</h3>
+<p>We can also define marginal heritability by <span class="math inline">\tilde{\mathbf{c}}_{ij}</span> that contrasts genetic effects averaged across environments, such that <span class="math display">
+\tilde{\mathbf{c}}_{ij}^\top\mathbf{u} = \left( u_{g_i} + \sum_k \mathbb{E}[z_{ge_{ik}}] u_{ge_{ik}} \right) - \left(u_{g_j} + \sum_k \mathbb{E}[z_{ge_{jk}}] u_{ge_{jk}} \right)
+</span></p>
+</section>
+<section id="usage" class="slide level2">
+<h2>Usage</h2>
+<p>There are three important arguments for the key functions <code>H2</code> and <code>h2</code>:</p>
+<ul>
+<li><p><code>target</code>: specifying the model component on which heritability is estimated</p></li>
+<li><p><code>marginal</code>: whether to compute marginal heritability</p></li>
+<li><p><code>stratification</code>: specifying the environmental strata at which heritability is estimated</p></li>
+</ul>
+<p><br></p>
+<p>We use a lettuce breeding dataset for resistance to downy mildew for demonstration <span class="citation" data-cites="hadasch2016comparing">(<a href="#/reference" role="doc-biblioref" onclick="">Hadasch et al. 2016</a>)</span></p>
+<p><br></p>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># gen: genotype</span></span>
+<span id="cb3-2"><a href=""></a><span class="co"># loc: location</span></span>
+<span id="cb3-3"><a href=""></a><span class="co"># rep: replicates</span></span>
+<span id="cb3-4"><a href=""></a><span class="co"># Fit a asreml model</span></span>
+<span id="cb3-5"><a href=""></a>model <span class="ot">&lt;-</span> asreml<span class="sc">::</span><span class="fu">asreml</span>(</span>
+<span id="cb3-6"><a href=""></a>  <span class="at">fixed =</span> y <span class="sc">~</span> rep,</span>
+<span id="cb3-7"><a href=""></a>  <span class="at">random =</span> <span class="sc">~</span> gen <span class="sc">+</span> loc <span class="sc">+</span> gen<span class="sc">:</span>loc,</span>
+<span id="cb3-8"><a href=""></a>  <span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> heritable<span class="sc">::</span>lettuce_phenotypes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Online License checked out Mon Jun 22 20:41:15 2026</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="board-sense-heritability" class="slide level2">
+<h2>Board-sense heritability</h2>
+<h3 id="main-heritability">Main heritability</h3>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>heritable<span class="sc">::</span><span class="fu">H2</span>(model, <span class="at">target =</span> <span class="st">"gen"</span>, <span class="at">marginal =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.7818483 0.7818483 0.7806164 0.7818483 0.7750432 </code></pre>
+</div>
+</div>
+</div>
+<p><br></p>
+<h3 id="marginal-heritability-1">Marginal heritability</h3>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>heritable<span class="sc">::</span><span class="fu">H2</span>(model, <span class="at">target =</span> <span class="st">"gen"</span>, <span class="at">marginal =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.8918403 0.8816483 0.8895923 0.8918403 0.8895923 </code></pre>
+</div>
+</div>
+</div>
+<p><br></p>
+<h3 id="stratified-heritability-at-location-l1">Stratified heritability at location <code>L1</code></h3>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>heritable<span class="sc">::</span><span class="fu">H2</span>(model, <span class="at">target =</span> <span class="st">"gen"</span>, <span class="at">stratification =</span> <span class="fu">data.frame</span>(<span class="at">loc =</span> <span class="st">"L1"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.7870171 0.7780585 0.7250283 0.7870171 0.7250283 </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="narrow-sense-heritability" class="slide level2">
+<h2>Narrow-sense heritability</h2>
+<h3 id="same-usage-differs-in-the-modelling-stage">Same usage, differs in the modelling stage</h3>
+<p>We model known additive genetic variance structure using the <code>vm</code> special in <code>asreml</code>:</p>
+<p><br></p>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a><span class="co"># lettuce_GRM: genomic relationship matrix defining the known variance structure</span></span>
+<span id="cb11-2"><a href=""></a><span class="co"># Fit a asreml model</span></span>
+<span id="cb11-3"><a href=""></a>model <span class="ot">&lt;-</span> asreml<span class="sc">::</span><span class="fu">asreml</span>(</span>
+<span id="cb11-4"><a href=""></a>  <span class="at">fixed =</span> y <span class="sc">~</span> rep,</span>
+<span id="cb11-5"><a href=""></a>  <span class="at">random =</span> <span class="sc">~</span> <span class="fu">vm</span>(gen, <span class="at">source =</span> heritable<span class="sc">::</span>lettuce_GRM)<span class="sc">*</span><span class="fu">idv</span>(loc),</span>
+<span id="cb11-6"><a href=""></a>  <span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> heritable<span class="sc">::</span>lettuce_phenotypes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<p><br></p>
+<p>An additional argument <code>source</code> is required by <code>h2</code>:</p>
+<p><br></p>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>heritable<span class="sc">::</span><span class="fu">h2</span>(model, <span class="at">target =</span> <span class="st">"gen"</span>, <span class="at">marginal =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb12-2"><a href=""></a>              <span class="at">source =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">heritable::lettuce_GRM</span><span class="st">`</span> <span class="ot">=</span> heritable<span class="sc">::</span>lettuce_GRM))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.8757316 0.6572500 0.8528437 0.8748936 0.8468753 </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="confidence-interval" class="slide level2">
+<h2>Confidence Interval</h2>
+<p>To compute CI, simply run <code>confint</code> on saved <code>heritable</code> objects</p>
+<p><br></p>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href=""></a><span class="co"># Store the `heritable` object</span></span>
+<span id="cb14-2"><a href=""></a>my_h2 <span class="ot">&lt;-</span> heritable<span class="sc">::</span><span class="fu">h2</span>(model, <span class="at">target =</span> <span class="st">"gen"</span>, <span class="at">marginal =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-3"><a href=""></a>              <span class="at">source =</span> <span class="fu">list</span>(<span class="st">`</span><span class="at">heritable::lettuce_GRM</span><span class="st">`</span> <span class="ot">=</span> heritable<span class="sc">::</span>lettuce_GRM))</span>
+<span id="cb14-4"><a href=""></a></span>
+<span id="cb14-5"><a href=""></a><span class="co"># Run confint generic!</span></span>
+<span id="cb14-6"><a href=""></a><span class="fu">confint</span>(my_h2, <span class="at">parallel =</span> <span class="st">"snow"</span>, <span class="at">ncpus =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>             2.5 %    97.5 %
+Cullis   0.8323671 0.9374830
+Oakey    0.5911317 0.7334316
+Piepho   0.8028306 0.9190309
+Delta    0.8283260 0.9346294
+Standard 0.7888382 0.9111070</code></pre>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>The function supports parallel computing to accelerate parametric bootstrap.</p>
+</section>
+<section id="works-for-complex-models" class="slide level2">
+<h2>Works for complex models</h2>
+<h3 id="deep-nesting">Deep nesting</h3>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href=""></a>lme4<span class="sc">::</span><span class="fu">lmer</span>(</span>
+<span id="cb16-2"><a href=""></a>  y <span class="sc">~</span> Type <span class="sc">*</span> Treatment <span class="sc">*</span> Stage <span class="sc">+</span></span>
+<span id="cb16-3"><a href=""></a>    (<span class="dv">1</span> <span class="sc">|</span> Genotype) <span class="sc">+</span> (Stage <span class="sc">|</span> Genotype <span class="sc">/</span> Treatment) <span class="sc">+</span></span>
+<span id="cb16-4"><a href=""></a>    (<span class="dv">1</span> <span class="sc">|</span> Date) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Plot <span class="sc">/</span> Replicate),</span>
+<span id="cb16-5"><a href=""></a>  <span class="at">data =</span> df,</span>
+<span id="cb16-6"><a href=""></a>  <span class="at">REML =</span> <span class="cn">FALSE</span></span>
+<span id="cb16-7"><a href=""></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href=""></a>  heritable<span class="sc">::</span><span class="fu">H2</span>(<span class="at">target =</span> <span class="st">"genotype"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.5793787 0.5969357 0.4619369 0.5793787 0.4592437 </code></pre>
+</div>
+</div>
+</div>
+<p><br></p>
+<h3 id="residual-modeling">Residual modeling</h3>
+<div class="small-code">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href=""></a><span class="fu">asreml</span>(</span>
+<span id="cb18-2"><a href=""></a>  <span class="at">fixed =</span> y <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb18-3"><a href=""></a>  <span class="at">random =</span> <span class="sc">~</span> Line <span class="sc">+</span> Range <span class="sc">+</span> Row <span class="sc">+</span> RowRep<span class="sc">:</span>ColRep,</span>
+<span id="cb18-4"><a href=""></a>  <span class="at">residual =</span> <span class="fu">ar1</span>(Range)<span class="sc">:</span><span class="fu">ar1</span>(Row),</span>
+<span id="cb18-5"><a href=""></a>  <span class="at">data =</span> df</span>
+<span id="cb18-6"><a href=""></a>) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href=""></a>  heritable<span class="sc">::</span><span class="fu">H2</span>(<span class="at">target =</span> <span class="st">"Line"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Cullis     Oakey    Piepho     Delta  Standard 
+0.9545024 0.9545024 0.9544771 0.9545024 0.9518358 </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="future-development" class="slide level2">
+<h2>Future development</h2>
+<h3 id="more-variance-structures">More variance structures</h3>
+<p><code>heritable</code> needs to parse <code>asreml</code> variance modeling specials and convert variance estimates into variance matrices.</p>
+<ul>
+<li><p>Some structures are already supported</p></li>
+<li><p>More structures can be added</p></li>
+</ul>
+<h3 id="custom-heritability-definitions">Custom heritability definitions</h3>
+<p>Future versions could allow users to provide their own linear functionals, such as <span class="math inline">\mathbf{d}</span> or <span class="math inline">\mathbf{c}</span>.</p>
+<p>This would support custom heritability definitions for user-defined contrasts.</p>
 </section>
 <section id="reference" class="slide level2 smaller scrollable">
 <h2>Reference</h2>
@@ -420,6 +615,9 @@ Cullis, Brian R, Alison B Smith, and Neil E Coombes. 2006. <span>“On the Desig
 </div>
 <div id="ref-falconer1996introduction" class="csl-entry" role="listitem">
 Falconer, Douglas Scott. 1996. <em>Introduction to Quantitative Genetics</em>. Pearson Education India.
+</div>
+<div id="ref-hadasch2016comparing" class="csl-entry" role="listitem">
+Hadasch, Steffen, Ivan Simko, Ryan J Hayes, Joseph O Ogutu, and Hans-Peter Piepho. 2016. <span>“Comparing the Predictive Abilities of Phenotypic and Marker-Assisted Selection Methods in a Biparental Lettuce Population.”</span> <em>The Plant Genome</em> 9 (1): plantgenome2015–03.
 </div>
 <div id="ref-oakey2006joint" class="csl-entry" role="listitem">
 Oakey, Helena, Arūnas Verbyla, Wayne Pitchford, Brian Cullis, and Haydn Kuchel. 2006. <span>“Joint Modeling of Additive and Non-Additive Genetic Line Effects in Single Field Trials.”</span> <em>Theoretical and Applied Genetics</em> 113 (5): 809–19.

@@ -197,23 +197,252 @@ Similarly, the `Delta (BLUP)`, `Cullis`, and `Oakey` estimators differ in how th
   \arg\max_\mathbf{c} 1- \frac{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}{\mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)}
   $$
 
-## What we learned
+## We can define our own linear functionals
 
-### Heritability calculation is consistent regardless of the model
-
-The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random-effect component.
+The calculation follows the same principle as long as the genetic effect of interest can be isolated as a random effect component.
 
 <br>
 
-### Extension is straightforward
-
-1. We can define our own linear functional.
-
-2. We can incorporate G×E effects by defining a functional $\tilde{\mathbf{c}}_{ijk}$ on the full random effect vector
-$\mathbf{u} =\begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge}\end{bmatrix}$, such that $\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - u_{g_j} - u_{ge_{jk}}$ represents a stratified genetic contrast in environment $k$, and 
 $$
-H^2 = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}_{ijk}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}_{ijk}^\top \mathbf{u})}
+\mathbf{y}
+=
+\mathbf{X}\boldsymbol{\beta}
++
+\color{red}{\mathbf{Z}_g\mathbf{u}_g}
+\color{black}
++
+\mathbf{Z}_{ge}\mathbf{u}_{ge}
++
+\boldsymbol{\varepsilon}
 $$
+
+## Extension to G×E is straightforward
+
+G×E effects can be incorporated into the heritability definition by defining and decomposing variance of the full random effect vector
+$$
+\mathbf{u} = \begin{bmatrix} \mathbf{u}_g \\ \mathbf{u}_{ge} \end{bmatrix},
+$$
+Let $\tilde{\mathbf{c}}$ be a linear functional defined on $\mathbf{u}$, then 
+$$
+H^2_{\text{GVP}} = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\tilde{\mathbf{c}}^\top\left(\mathbf{u} - \hat{\mathbf{u}}\right)\right]}{\mathrm{Var}(\tilde{\mathbf{c}}^\top \mathbf{u})}.
+$$
+
+This extension can be applied also to phenotypic variance partitioning. 
+
+## Stratified and marginal heritability
+
+### Stratified heritability
+
+We can define stratified heritability with a functional $\tilde{\mathbf{c}}_{ijk}$ that contrasts genetic effects within an environment $k$, such that 
+$$
+\tilde{\mathbf{c}}_{ijk}^\top\mathbf{u} = u_{g_i} + u_{ge_{ik}} - (u_{g_j} + u_{ge_{jk}})
+$$
+
+### Marginal heritability
+We can also define marginal heritability by $\tilde{\mathbf{c}}_{ij}$ that contrasts genetic effects averaged across environments, such that
+$$
+\tilde{\mathbf{c}}_{ij}^\top\mathbf{u} = \left( u_{g_i} + \sum_k \mathbb{E}[z_{ge_{ik}}] u_{ge_{ik}} \right) - \left(u_{g_j} + \sum_k \mathbb{E}[z_{ge_{jk}}] u_{ge_{jk}} \right) 
+$$
+
+## Usage
+
+There are three important arguments for the key functions `H2` and `h2`:
+
+- `target`: specifying the model component on which heritability is estimated
+
+- `marginal`: whether to compute marginal heritability
+
+- `stratification`: specifying the environmental strata at which heritability is estimated
+
+<br>
+
+We use a lettuce breeding dataset for resistance to downy mildew for demonstration [@hadasch2016comparing]
+
+<br>
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+# gen: genotype
+# loc: location
+# rep: replicates
+# Fit a asreml model
+model <- asreml::asreml(
+  fixed = y ~ rep,
+  random = ~ gen + loc + gen:loc,
+  trace = FALSE, data = heritable::lettuce_phenotypes)
+```
+:::
+
+## Board-sense heritability
+
+### Main heritability
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+heritable::H2(model, target = "gen", marginal = FALSE)
+```
+:::
+
+<br>
+
+### Marginal heritability
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+heritable::H2(model, target = "gen", marginal = TRUE)
+```
+:::
+
+<br>
+
+### Stratified heritability at location `L1`
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+heritable::H2(model, target = "gen", stratification = data.frame(loc = "L1"))
+```
+:::
+
+## Narrow-sense heritability
+
+### Same usage, differs in the modelling stage
+
+We model known additive genetic variance structure using the `vm` special in `asreml`:
+
+<br>
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+# lettuce_GRM: genomic relationship matrix defining the known variance structure
+# Fit a asreml model
+model <- asreml::asreml(
+  fixed = y ~ rep,
+  random = ~ vm(gen, source = heritable::lettuce_GRM)*idv(loc),
+  trace = FALSE, data = heritable::lettuce_phenotypes)
+```
+:::
+
+<br>
+
+An additional argument `source` is required by `h2`: 
+
+<br>
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: true
+heritable::h2(model, target = "gen", marginal = FALSE,
+              source = list(`heritable::lettuce_GRM` = heritable::lettuce_GRM))
+```
+:::
+
+## Confidence Interval
+
+To compute CI, simply run `confint` on saved `heritable` objects
+
+<br>
+
+```{r}
+ci_tab <- readRDS("code/ci_tab.rds")
+```
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: false
+# Store the `heritable` object
+my_h2 <- heritable::h2(model, target = "gen", marginal = FALSE,
+              source = list(`heritable::lettuce_GRM` = heritable::lettuce_GRM))
+
+# Run confint generic!
+confint(my_h2, parallel = "snow", ncpus = 3)
+```
+```{r}
+ci_tab
+```
+:::
+
+<br>
+
+The function supports parallel computing to accelerate parametric bootstrap.
+
+## Works for complex models
+
+### Deep nesting
+
+```{r}
+my_H2 <- readRDS("code/H21.rds")
+```
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: false
+lme4::lmer(
+  y ~ Type * Treatment * Stage +
+    (1 | Genotype) + (Stage | Genotype / Treatment) +
+    (1 | Date) + (1 | Plot / Replicate),
+  data = df,
+  REML = FALSE
+) |>
+  heritable::H2(target = "genotype")
+```
+```{r}
+my_H2
+```
+:::
+
+<br>
+
+### Residual modeling
+
+```{r}
+my_H2 <- readRDS("code/H22.rds")
+```
+
+::: {.small-code}
+```{r}
+#| echo: true
+#| eval: false
+asreml(
+  fixed = y ~ 1,
+  random = ~ Line + Range + Row + RowRep:ColRep,
+  residual = ar1(Range):ar1(Row),
+  data = df
+) |>
+  heritable::H2(target = "Line")
+```
+```{r}
+my_H2
+```
+:::
+
+## Future development
+
+### More variance structures
+
+`heritable` needs to parse `asreml` variance modeling specials and convert variance estimates into variance matrices.
+
+- Some structures are already supported
+
+- More structures can be added
+
+### Custom heritability definitions
+
+Future versions could allow users to provide their own linear functionals, such as $\mathbf{d}$ or $\mathbf{c}$.
+
+This would support custom heritability definitions for user-defined contrasts.
 
 ## Reference
 
