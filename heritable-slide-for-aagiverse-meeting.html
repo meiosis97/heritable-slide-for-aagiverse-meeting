@@ -248,18 +248,22 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
     </div>
 </div>
 
-  <p class="date">22th June 2026</p>
+  <p class="date">24th June 2026</p>
+</section>
+<section id="what-is-heritability" class="slide level2">
+<h2>What is heritability</h2>
 </section>
 <section id="project-overview" class="slide level2">
 <h2>Project overview</h2>
-<h3 id="flexible-heritability-estimation-for-linear-mixed-models-lmms">Flexible heritability estimation for linear mixed models (LMMs)</h3>
+<p>Given genotypes and their observed traits in a trial, heritability helps breeders decide <strong>whether the trial contains enough genetic signal for selection</strong>.</p>
+<p><br></p>
 <p>This project aims to make heritability estimation from LMMs more accessible, flexible, and interpretable.</p>
 <p><br></p>
 <h3 id="it-brings-together">It brings together:</h3>
 <ul>
 <li>6 commonly used heritability estimators <span class="citation" data-cites="schmidt_2019">(<a href="#/reference" role="doc-biblioref" onclick="">Paul Schmidt et al. 2019</a>)</span></li>
 <li>confidence interval based on parametric bootstrap</li>
-<li>support for different LMM fitters, including <code>asreml</code> and <code>lme4</code>, with flexible model constructs</li>
+<li>support for different model object, including <code>asreml</code> and <code>lme4</code>, with flexible model constructs</li>
 <li>G×E extensions for environment-specific and environment-averaged heritability</li>
 <li>a companion paper on estimator relationships and statistical properties</li>
 </ul>
@@ -458,7 +462,7 @@ H^2_{\text{GVP}} = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\
 <span id="cb3-7"><a href=""></a>  <span class="at">random =</span> <span class="sc">~</span> gen <span class="sc">+</span> loc <span class="sc">+</span> gen<span class="sc">:</span>loc,</span>
 <span id="cb3-8"><a href=""></a>  <span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> heritable<span class="sc">::</span>lettuce_phenotypes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Online License checked out Mon Jun 22 20:41:15 2026</code></pre>
+<pre><code>Online License checked out Wed Jun 24 21:54:21 2026</code></pre>
 </div>
 </div>
 </div>
@@ -563,10 +567,9 @@ Standard 0.7888382 0.9111070</code></pre>
 <span id="cb16-2"><a href=""></a>  y <span class="sc">~</span> Type <span class="sc">*</span> Treatment <span class="sc">*</span> Stage <span class="sc">+</span></span>
 <span id="cb16-3"><a href=""></a>    (<span class="dv">1</span> <span class="sc">|</span> Genotype) <span class="sc">+</span> (Stage <span class="sc">|</span> Genotype <span class="sc">/</span> Treatment) <span class="sc">+</span></span>
 <span id="cb16-4"><a href=""></a>    (<span class="dv">1</span> <span class="sc">|</span> Date) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> Plot <span class="sc">/</span> Replicate),</span>
-<span id="cb16-5"><a href=""></a>  <span class="at">data =</span> df,</span>
-<span id="cb16-6"><a href=""></a>  <span class="at">REML =</span> <span class="cn">FALSE</span></span>
-<span id="cb16-7"><a href=""></a>) <span class="sc">|&gt;</span></span>
-<span id="cb16-8"><a href=""></a>  heritable<span class="sc">::</span><span class="fu">H2</span>(<span class="at">target =</span> <span class="st">"genotype"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-5"><a href=""></a>  <span class="at">data =</span> df</span>
+<span id="cb16-6"><a href=""></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-7"><a href=""></a>  heritable<span class="sc">::</span><span class="fu">H2</span>(<span class="at">target =</span> <span class="st">"genotype"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">

@@ -18,9 +18,13 @@ bibliography: references.bib
 date-format: "D[th] MMMM YYYY"
 ---
 
+## What is heritability
+
 ## Project overview
 
-### Flexible heritability estimation for linear mixed models (LMMs)
+Given genotypes and their observed traits in a trial, heritability helps breeders decide **whether the trial contains enough genetic signal for selection**.
+
+<br>
 
 This project aims to make heritability estimation from LMMs more accessible, flexible, and interpretable.
 
@@ -30,7 +34,7 @@ This project aims to make heritability estimation from LMMs more accessible, fle
 
 -   6 commonly used heritability estimators [@schmidt_2019]
 -   confidence interval based on parametric bootstrap
--   support for different LMM fitters, including `asreml` and `lme4`, with flexible model constructs
+-   support for different model object, including `asreml` and `lme4`, with flexible model constructs
 -   G×E extensions for environment-specific and environment-averaged heritability
 -   a companion paper on estimator relationships and statistical properties
 
@@ -393,8 +397,7 @@ lme4::lmer(
   y ~ Type * Treatment * Stage +
     (1 | Genotype) + (Stage | Genotype / Treatment) +
     (1 | Date) + (1 | Plot / Replicate),
-  data = df,
-  REML = FALSE
+  data = df
 ) |>
   heritable::H2(target = "genotype")
 ```
