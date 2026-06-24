@@ -18,8 +18,6 @@ bibliography: references.bib
 date-format: "D[th] MMMM YYYY"
 ---
 
-## What is heritability
-
 ## Project overview
 
 Given genotypes and their observed traits in a trial, heritability helps breeders decide **whether the trial contains enough genetic signal for selection**.
