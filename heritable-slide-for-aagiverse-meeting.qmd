@@ -173,9 +173,6 @@ This class includes the `Standard`, `Delta (BLUE)`, and `Piepho` estimators. Dif
   $$
 - `Delta (BLUE)` [@schmidt2019estimating]: same pairwise idea, but $\mathbf{d}_{ij}$ maps $\mathbf{y}$ to BLUE contrasts from a counterpart model where genetic effects are fitted as fixed:
   $$
-  y \sim x + (1|g) + (1|ge) \Rightarrow y \sim x + g + (1|ge)
-  $$
-  $$
   \mathbf{d}_{ij}^\top \mathbf{y}
   =
   \hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
