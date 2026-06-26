@@ -248,7 +248,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
     </div>
 </div>
 
-  <p class="date">25th June 2026</p>
+  <p class="date">26th June 2026</p>
 </section>
 <section id="project-overview" class="slide level2">
 <h2>Project overview</h2>
@@ -260,7 +260,7 @@ Yidi Deng, Fonti Kar, Patrick Li, Emi Tanaka
 <ul>
 <li>6 commonly used heritability estimators <span class="citation" data-cites="schmidt_2019">(<a href="#/reference" role="doc-biblioref" onclick="">Paul Schmidt et al. 2019</a>)</span></li>
 <li>confidence interval based on parametric bootstrap</li>
-<li>support for different model object, including <code>asreml</code> and <code>lme4</code>, with flexible model constructs</li>
+<li>support for different model object (<code>asreml</code> and <code>lme4</code>), with flexible model constructs</li>
 <li>G×E extensions for environment-specific and environment-averaged heritability</li>
 <li>a companion paper on estimator relationships and statistical properties</li>
 </ul>
@@ -377,7 +377,7 @@ H^2 = 1 - V_{\text{PEV}}/V_G
 <li><p><code>Standard</code> <span class="citation" data-cites="falconer1996introduction">(<a href="#/reference" role="doc-biblioref" onclick="">Falconer 1996</a>)</span>: <span class="math inline">\mathbf{d}_{ij}</span> is defined for a genotype pair <span class="math inline">(i, j)</span> such that <span class="math inline">\mathbf{d}_{ij}^\top \mathbf{y}</span> represents the phenotypic mean difference between genotypes <span class="math inline">i</span> and <span class="math inline">j</span>: <span class="math display">
 \mathbf{d}_{ij}^\top \mathbf{y} = \bar{y}_i - \bar{y}_j.
 </span></p></li>
-<li><p><code>Delta (BLUE)</code> <span class="citation" data-cites="schmidt2019estimating">(<a href="#/reference" role="doc-biblioref" onclick="">P. Schmidt et al. 2019</a>)</span>: same pairwise idea, but <span class="math inline">\mathbf{d}_{ij}</span> maps <span class="math inline">\mathbf{y}</span> to BLUE contrasts from a counterpart model where genetic effects are fitted as fixed: <span class="math display">
+<li><p><code>Delta (BLUE)</code> <span class="citation" data-cites="schmidt2019estimating">(<a href="#/reference" role="doc-biblioref" onclick="">P. Schmidt et al. 2019</a>)</span>: same pairwise idea, but <span class="math inline">\mathbf{d}_{ij}</span> maps <span class="math inline">\mathbf{y}</span> to BLUE contrasts from a <strong>counterpart model</strong> where genetic effects are fitted as fixed: <span class="math display">
 \mathbf{d}_{ij}^\top \mathbf{y}
 =
 \hat{\beta}_{g_i} - \hat{\beta}_{g_j}.
@@ -457,7 +457,7 @@ H^2_{\text{GVP}} = 1 - \frac{V_{\text{PEV}}}{V_G} = 1- \frac{\mathrm{Var}\left[\
 <span id="cb3-7"><a href=""></a>  <span class="at">random =</span> <span class="sc">~</span> gen <span class="sc">+</span> loc <span class="sc">+</span> gen<span class="sc">:</span>loc,</span>
 <span id="cb3-8"><a href=""></a>  <span class="at">trace =</span> <span class="cn">FALSE</span>, <span class="at">data =</span> heritable<span class="sc">::</span>lettuce_phenotypes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Online License checked out Thu Jun 25 14:05:54 2026</code></pre>
+<pre><code>Online License checked out Fri Jun 26 21:09:35 2026</code></pre>
 </div>
 </div>
 </div>
@@ -601,9 +601,13 @@ Standard 0.7888382 0.9111070</code></pre>
 <li><p>Some structures are already supported</p></li>
 <li><p>More structures can be added</p></li>
 </ul>
+<p><br></p>
 <h3 id="custom-heritability-definitions">Custom heritability definitions</h3>
 <p>Future versions could allow users to provide their own linear functionals, such as <span class="math inline">\mathbf{d}</span> or <span class="math inline">\mathbf{c}</span>.</p>
 <p>This would support custom heritability definitions for user-defined contrasts.</p>
+<p><br></p>
+<h3 id="more-model-objects">More model objects</h3>
+<p>Patrick is working on <code>glmmTMB</code></p>
 </section>
 <section id="reference" class="slide level2 smaller scrollable">
 <h2>Reference</h2>

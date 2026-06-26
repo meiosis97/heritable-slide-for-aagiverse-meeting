@@ -32,7 +32,7 @@ This project aims to make heritability estimation from LMMs more accessible, fle
 
 -   6 commonly used heritability estimators [@schmidt_2019]
 -   confidence interval based on parametric bootstrap
--   support for different model object, including `asreml` and `lme4`, with flexible model constructs
+-   support for different model object (`asreml` and `lme4`), with flexible model constructs
 -   G×E extensions for environment-specific and environment-averaged heritability
 -   a companion paper on estimator relationships and statistical properties
 
@@ -171,7 +171,7 @@ This class includes the `Standard`, `Delta (BLUE)`, and `Piepho` estimators. Dif
   $$
   \mathbf{d}_{ij}^\top \mathbf{y} = \bar{y}_i - \bar{y}_j. 
   $$
-- `Delta (BLUE)` [@schmidt2019estimating]: same pairwise idea, but $\mathbf{d}_{ij}$ maps $\mathbf{y}$ to BLUE contrasts from a counterpart model where genetic effects are fitted as fixed:
+- `Delta (BLUE)` [@schmidt2019estimating]: same pairwise idea, but $\mathbf{d}_{ij}$ maps $\mathbf{y}$ to BLUE contrasts from a **counterpart model** where genetic effects are fitted as fixed:
   $$
   \mathbf{d}_{ij}^\top \mathbf{y}
   =
@@ -436,11 +436,19 @@ my_H2
 
 - More structures can be added
 
+<br>
+
 ### Custom heritability definitions
 
 Future versions could allow users to provide their own linear functionals, such as $\mathbf{d}$ or $\mathbf{c}$.
 
 This would support custom heritability definitions for user-defined contrasts.
+
+<br>
+
+### More model objects
+
+Patrick is working on `glmmTMB`
 
 ## Reference
 
