@@ -195,6 +195,11 @@ Similarly, the `Delta (BLUP)`, `Cullis`, and `Oakey` estimators differ in how th
   $$
   \arg\max_\mathbf{c} 1- \frac{\mathrm{Var}\left[\mathbf{c}^\top\left(\mathbf{u}_g - \hat{\mathbf{u}}_g\right)\right]}{\mathrm{Var}(\mathbf{c}^\top \mathbf{u}_g)}
   $$
+  
+## Back to the original formulation
+
+![*A slide from Fonti's talk*](images/slide.JPG){fig-align="center"}
+
 
 ## We can define our own linear functionals
 
