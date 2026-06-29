@@ -1,5 +1,5 @@
 ---
-title: Flexible heritability estimation from complex linear mixed models
+title: heritable - Flexible heritability estimation from complex linear mixed models
 subtitle: AAGIverse Community Event
 format:
   anu-light-revealjs:
